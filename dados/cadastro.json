@@ -1,0 +1,1204 @@
+{
+  "clientes": [
+    {
+      "id": "CLI-001",
+      "nome": "Moda Carioca",
+      "segmento": "varejo de moda"
+    },
+    {
+      "id": "CLI-002",
+      "nome": "Banco Horizonte",
+      "segmento": "bancário"
+    }
+  ],
+  "lojas": [
+    {
+      "id": "LOJA-RJ-001",
+      "cliente_id": "CLI-001",
+      "nome": "Loja Tijuca",
+      "tipo": "loja de rua",
+      "cidade": "Rio de Janeiro",
+      "uf": "RJ",
+      "latitude": -22.9247,
+      "longitude": -43.233,
+      "fuso_horario": "America/Sao_Paulo",
+      "horario_funcionamento": {
+        "seg": [
+          "09:00",
+          "20:00"
+        ],
+        "ter": [
+          "09:00",
+          "20:00"
+        ],
+        "qua": [
+          "09:00",
+          "20:00"
+        ],
+        "qui": [
+          "09:00",
+          "20:00"
+        ],
+        "sex": [
+          "09:00",
+          "20:00"
+        ],
+        "sab": [
+          "09:00",
+          "18:00"
+        ],
+        "dom": null
+      }
+    },
+    {
+      "id": "LOJA-SP-001",
+      "cliente_id": "CLI-001",
+      "nome": "Loja Paulista",
+      "tipo": "loja de shopping",
+      "cidade": "São Paulo",
+      "uf": "SP",
+      "latitude": -23.5614,
+      "longitude": -46.6559,
+      "fuso_horario": "America/Sao_Paulo",
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      }
+    },
+    {
+      "id": "LOJA-PE-001",
+      "cliente_id": "CLI-001",
+      "nome": "Loja Boa Viagem",
+      "tipo": "loja de shopping",
+      "cidade": "Recife",
+      "uf": "PE",
+      "latitude": -8.1197,
+      "longitude": -34.9043,
+      "fuso_horario": "America/Recife",
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      }
+    },
+    {
+      "id": "LOJA-MG-001",
+      "cliente_id": "CLI-002",
+      "nome": "Agência Savassi",
+      "tipo": "agência bancária",
+      "cidade": "Belo Horizonte",
+      "uf": "MG",
+      "latitude": -19.9386,
+      "longitude": -43.9352,
+      "fuso_horario": "America/Sao_Paulo",
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "16:00"
+        ],
+        "ter": [
+          "10:00",
+          "16:00"
+        ],
+        "qua": [
+          "10:00",
+          "16:00"
+        ],
+        "qui": [
+          "10:00",
+          "16:00"
+        ],
+        "sex": [
+          "10:00",
+          "16:00"
+        ],
+        "sab": null,
+        "dom": null
+      }
+    },
+    {
+      "id": "LOJA-PR-001",
+      "cliente_id": "CLI-002",
+      "nome": "Agência Batel",
+      "tipo": "agência bancária",
+      "cidade": "Curitiba",
+      "uf": "PR",
+      "latitude": -25.4411,
+      "longitude": -49.286,
+      "fuso_horario": "America/Sao_Paulo",
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "16:00"
+        ],
+        "ter": [
+          "10:00",
+          "16:00"
+        ],
+        "qua": [
+          "10:00",
+          "16:00"
+        ],
+        "qui": [
+          "10:00",
+          "16:00"
+        ],
+        "sex": [
+          "10:00",
+          "16:00"
+        ],
+        "sab": null,
+        "dom": null
+      }
+    }
+  ],
+  "ambientes": [
+    {
+      "id": "AMB-001",
+      "loja_id": "LOJA-RJ-001",
+      "nome": "Salão de vendas - Vitrine",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "09:00",
+          "20:00"
+        ],
+        "ter": [
+          "09:00",
+          "20:00"
+        ],
+        "qua": [
+          "09:00",
+          "20:00"
+        ],
+        "qui": [
+          "09:00",
+          "20:00"
+        ],
+        "sex": [
+          "09:00",
+          "20:00"
+        ],
+        "sab": [
+          "09:00",
+          "18:00"
+        ],
+        "dom": null
+      },
+      "dev_id": "IOT001"
+    },
+    {
+      "id": "AMB-002",
+      "loja_id": "LOJA-RJ-001",
+      "nome": "Salão de vendas - Centro",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "09:00",
+          "20:00"
+        ],
+        "ter": [
+          "09:00",
+          "20:00"
+        ],
+        "qua": [
+          "09:00",
+          "20:00"
+        ],
+        "qui": [
+          "09:00",
+          "20:00"
+        ],
+        "sex": [
+          "09:00",
+          "20:00"
+        ],
+        "sab": [
+          "09:00",
+          "18:00"
+        ],
+        "dom": null
+      },
+      "dev_id": "IOT002"
+    },
+    {
+      "id": "AMB-003",
+      "loja_id": "LOJA-RJ-001",
+      "nome": "Provadores",
+      "faixa_conforto_c": {
+        "min": 22,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "09:00",
+          "20:00"
+        ],
+        "ter": [
+          "09:00",
+          "20:00"
+        ],
+        "qua": [
+          "09:00",
+          "20:00"
+        ],
+        "qui": [
+          "09:00",
+          "20:00"
+        ],
+        "sex": [
+          "09:00",
+          "20:00"
+        ],
+        "sab": [
+          "09:00",
+          "18:00"
+        ],
+        "dom": null
+      },
+      "dev_id": "IOT003"
+    },
+    {
+      "id": "AMB-004",
+      "loja_id": "LOJA-RJ-001",
+      "nome": "Frente de caixa",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "09:00",
+          "20:00"
+        ],
+        "ter": [
+          "09:00",
+          "20:00"
+        ],
+        "qua": [
+          "09:00",
+          "20:00"
+        ],
+        "qui": [
+          "09:00",
+          "20:00"
+        ],
+        "sex": [
+          "09:00",
+          "20:00"
+        ],
+        "sab": [
+          "09:00",
+          "18:00"
+        ],
+        "dom": null
+      },
+      "dev_id": "IOT004"
+    },
+    {
+      "id": "AMB-005",
+      "loja_id": "LOJA-RJ-001",
+      "nome": "Estoque",
+      "faixa_conforto_c": {
+        "min": 18,
+        "max": 28
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "09:00",
+          "20:00"
+        ],
+        "ter": [
+          "09:00",
+          "20:00"
+        ],
+        "qua": [
+          "09:00",
+          "20:00"
+        ],
+        "qui": [
+          "09:00",
+          "20:00"
+        ],
+        "sex": [
+          "09:00",
+          "20:00"
+        ],
+        "sab": [
+          "09:00",
+          "18:00"
+        ],
+        "dom": null
+      },
+      "dev_id": "IOT005"
+    },
+    {
+      "id": "AMB-006",
+      "loja_id": "LOJA-RJ-001",
+      "nome": "Escritório da gerência",
+      "faixa_conforto_c": {
+        "min": 22,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "08:00",
+          "18:00"
+        ],
+        "ter": [
+          "08:00",
+          "18:00"
+        ],
+        "qua": [
+          "08:00",
+          "18:00"
+        ],
+        "qui": [
+          "08:00",
+          "18:00"
+        ],
+        "sex": [
+          "08:00",
+          "18:00"
+        ],
+        "sab": null,
+        "dom": null
+      },
+      "dev_id": "IOT006"
+    },
+    {
+      "id": "AMB-007",
+      "loja_id": "LOJA-RJ-001",
+      "nome": "Sala técnica (CPD)",
+      "faixa_conforto_c": {
+        "min": 18,
+        "max": 24
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "00:00",
+          "24:00"
+        ],
+        "ter": [
+          "00:00",
+          "24:00"
+        ],
+        "qua": [
+          "00:00",
+          "24:00"
+        ],
+        "qui": [
+          "00:00",
+          "24:00"
+        ],
+        "sex": [
+          "00:00",
+          "24:00"
+        ],
+        "sab": [
+          "00:00",
+          "24:00"
+        ],
+        "dom": [
+          "00:00",
+          "24:00"
+        ]
+      },
+      "dev_id": "IOT007"
+    },
+    {
+      "id": "AMB-008",
+      "loja_id": "LOJA-SP-001",
+      "nome": "Salão de vendas - Vitrine",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      },
+      "dev_id": "IOT008"
+    },
+    {
+      "id": "AMB-009",
+      "loja_id": "LOJA-SP-001",
+      "nome": "Salão de vendas - Centro",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      },
+      "dev_id": "IOT009"
+    },
+    {
+      "id": "AMB-010",
+      "loja_id": "LOJA-SP-001",
+      "nome": "Provadores",
+      "faixa_conforto_c": {
+        "min": 22,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      },
+      "dev_id": "IOT010"
+    },
+    {
+      "id": "AMB-011",
+      "loja_id": "LOJA-SP-001",
+      "nome": "Frente de caixa",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      },
+      "dev_id": "IOT011"
+    },
+    {
+      "id": "AMB-012",
+      "loja_id": "LOJA-SP-001",
+      "nome": "Estoque",
+      "faixa_conforto_c": {
+        "min": 18,
+        "max": 28
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      },
+      "dev_id": "IOT012"
+    },
+    {
+      "id": "AMB-013",
+      "loja_id": "LOJA-SP-001",
+      "nome": "Escritório da gerência",
+      "faixa_conforto_c": {
+        "min": 22,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "08:00",
+          "18:00"
+        ],
+        "ter": [
+          "08:00",
+          "18:00"
+        ],
+        "qua": [
+          "08:00",
+          "18:00"
+        ],
+        "qui": [
+          "08:00",
+          "18:00"
+        ],
+        "sex": [
+          "08:00",
+          "18:00"
+        ],
+        "sab": null,
+        "dom": null
+      },
+      "dev_id": "IOT013"
+    },
+    {
+      "id": "AMB-014",
+      "loja_id": "LOJA-PE-001",
+      "nome": "Salão de vendas - Vitrine",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      },
+      "dev_id": "IOT014"
+    },
+    {
+      "id": "AMB-015",
+      "loja_id": "LOJA-PE-001",
+      "nome": "Salão de vendas - Centro",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      },
+      "dev_id": "IOT015"
+    },
+    {
+      "id": "AMB-016",
+      "loja_id": "LOJA-PE-001",
+      "nome": "Provadores",
+      "faixa_conforto_c": {
+        "min": 22,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      },
+      "dev_id": "IOT016"
+    },
+    {
+      "id": "AMB-017",
+      "loja_id": "LOJA-PE-001",
+      "nome": "Frente de caixa",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      },
+      "dev_id": "IOT017"
+    },
+    {
+      "id": "AMB-018",
+      "loja_id": "LOJA-PE-001",
+      "nome": "Estoque",
+      "faixa_conforto_c": {
+        "min": 18,
+        "max": 28
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "22:00"
+        ],
+        "ter": [
+          "10:00",
+          "22:00"
+        ],
+        "qua": [
+          "10:00",
+          "22:00"
+        ],
+        "qui": [
+          "10:00",
+          "22:00"
+        ],
+        "sex": [
+          "10:00",
+          "22:00"
+        ],
+        "sab": [
+          "10:00",
+          "22:00"
+        ],
+        "dom": [
+          "14:00",
+          "20:00"
+        ]
+      },
+      "dev_id": "IOT018"
+    },
+    {
+      "id": "AMB-019",
+      "loja_id": "LOJA-MG-001",
+      "nome": "Autoatendimento",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "06:00",
+          "22:00"
+        ],
+        "ter": [
+          "06:00",
+          "22:00"
+        ],
+        "qua": [
+          "06:00",
+          "22:00"
+        ],
+        "qui": [
+          "06:00",
+          "22:00"
+        ],
+        "sex": [
+          "06:00",
+          "22:00"
+        ],
+        "sab": [
+          "06:00",
+          "22:00"
+        ],
+        "dom": [
+          "06:00",
+          "22:00"
+        ]
+      },
+      "dev_id": "IOT019"
+    },
+    {
+      "id": "AMB-020",
+      "loja_id": "LOJA-MG-001",
+      "nome": "Atendimento e caixas",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 24
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "16:00"
+        ],
+        "ter": [
+          "10:00",
+          "16:00"
+        ],
+        "qua": [
+          "10:00",
+          "16:00"
+        ],
+        "qui": [
+          "10:00",
+          "16:00"
+        ],
+        "sex": [
+          "10:00",
+          "16:00"
+        ],
+        "sab": null,
+        "dom": null
+      },
+      "dev_id": "IOT020"
+    },
+    {
+      "id": "AMB-021",
+      "loja_id": "LOJA-MG-001",
+      "nome": "Sala técnica (CPD)",
+      "faixa_conforto_c": {
+        "min": 18,
+        "max": 24
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "00:00",
+          "24:00"
+        ],
+        "ter": [
+          "00:00",
+          "24:00"
+        ],
+        "qua": [
+          "00:00",
+          "24:00"
+        ],
+        "qui": [
+          "00:00",
+          "24:00"
+        ],
+        "sex": [
+          "00:00",
+          "24:00"
+        ],
+        "sab": [
+          "00:00",
+          "24:00"
+        ],
+        "dom": [
+          "00:00",
+          "24:00"
+        ]
+      },
+      "dev_id": "IOT021"
+    },
+    {
+      "id": "AMB-022",
+      "loja_id": "LOJA-MG-001",
+      "nome": "Escritório da gerência",
+      "faixa_conforto_c": {
+        "min": 22,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "08:00",
+          "18:00"
+        ],
+        "ter": [
+          "08:00",
+          "18:00"
+        ],
+        "qua": [
+          "08:00",
+          "18:00"
+        ],
+        "qui": [
+          "08:00",
+          "18:00"
+        ],
+        "sex": [
+          "08:00",
+          "18:00"
+        ],
+        "sab": null,
+        "dom": null
+      },
+      "dev_id": "IOT022"
+    },
+    {
+      "id": "AMB-023",
+      "loja_id": "LOJA-PR-001",
+      "nome": "Autoatendimento",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 25
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "06:00",
+          "22:00"
+        ],
+        "ter": [
+          "06:00",
+          "22:00"
+        ],
+        "qua": [
+          "06:00",
+          "22:00"
+        ],
+        "qui": [
+          "06:00",
+          "22:00"
+        ],
+        "sex": [
+          "06:00",
+          "22:00"
+        ],
+        "sab": [
+          "06:00",
+          "22:00"
+        ],
+        "dom": [
+          "06:00",
+          "22:00"
+        ]
+      },
+      "dev_id": "IOT023"
+    },
+    {
+      "id": "AMB-024",
+      "loja_id": "LOJA-PR-001",
+      "nome": "Atendimento e caixas",
+      "faixa_conforto_c": {
+        "min": 21,
+        "max": 24
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "10:00",
+          "16:00"
+        ],
+        "ter": [
+          "10:00",
+          "16:00"
+        ],
+        "qua": [
+          "10:00",
+          "16:00"
+        ],
+        "qui": [
+          "10:00",
+          "16:00"
+        ],
+        "sex": [
+          "10:00",
+          "16:00"
+        ],
+        "sab": null,
+        "dom": null
+      },
+      "dev_id": "IOT024"
+    },
+    {
+      "id": "AMB-025",
+      "loja_id": "LOJA-PR-001",
+      "nome": "Sala técnica (CPD)",
+      "faixa_conforto_c": {
+        "min": 18,
+        "max": 24
+      },
+      "horario_funcionamento": {
+        "seg": [
+          "00:00",
+          "24:00"
+        ],
+        "ter": [
+          "00:00",
+          "24:00"
+        ],
+        "qua": [
+          "00:00",
+          "24:00"
+        ],
+        "qui": [
+          "00:00",
+          "24:00"
+        ],
+        "sex": [
+          "00:00",
+          "24:00"
+        ],
+        "sab": [
+          "00:00",
+          "24:00"
+        ],
+        "dom": [
+          "00:00",
+          "24:00"
+        ]
+      },
+      "dev_id": "IOT025"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": "USR-001",
+      "nome": "Ana Ribeiro",
+      "email": "ana.ribeiro@diel.example",
+      "perfil": "admin_diel",
+      "cliente_id": null,
+      "lojas": null
+    },
+    {
+      "id": "USR-002",
+      "nome": "Carlos Mendes",
+      "email": "carlos.mendes@modacarioca.example",
+      "perfil": "gestor_cliente",
+      "cliente_id": "CLI-001",
+      "lojas": null
+    },
+    {
+      "id": "USR-003",
+      "nome": "Juliana Prado",
+      "email": "juliana.prado@modacarioca.example",
+      "perfil": "gerente_loja",
+      "cliente_id": "CLI-001",
+      "lojas": [
+        "LOJA-SP-001"
+      ]
+    },
+    {
+      "id": "USR-004",
+      "nome": "Roberto Lima",
+      "email": "roberto.lima@bancohorizonte.example",
+      "perfil": "gestor_cliente",
+      "cliente_id": "CLI-002",
+      "lojas": null
+    }
+  ],
+  "perfis": {
+    "admin_diel": "vê todos os clientes e lojas",
+    "gestor_cliente": "vê todas as lojas do seu cliente",
+    "gerente_loja": "vê só as lojas listadas em `lojas`"
+  }
+}

@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply m-0 bg-slate-50 font-sans text-slate-900;
+  }
+}
+
+@layer utilities {
+  .diel-gradients-filter {
+    filter: url("#goo") blur(40px);
+  }
+}
