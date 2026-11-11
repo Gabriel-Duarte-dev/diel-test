@@ -110,19 +110,6 @@ Observacao de series:
 - Agregacao de series para periodos longos otimizada no PostgreSQL (`5min`, `hourly`, `daily`)
 - Temperatura externa integrada via Open-Meteo com persistencia local e retorno opcional na API
 
-## Auditoria e alterações
-
-O inventário das correções desta versão, as limitações de validação e as instruções para aplicar migrations estão em `IMPLEMENTED-CHANGES.md` e `PATCH-INSTRUCTIONS.md`.
-
-`npm run lint` executa o typecheck por enquanto. Para adicionar regras de lint TypeScript dedicadas, inclua parser e plugins compatíveis com ESLint 9.
-
-### Consistência dos indicadores
-
-- Leituras espúrias continuam disponíveis na série `raw` para diagnóstico, mas são excluídas de médias, percentuais e agregações.
-- `comfortPercent` considera somente o tempo monitorado dentro do horário de funcionamento.
-- `missingSeconds` compara o tempo de funcionamento esperado no período com o tempo monitorado, incluindo lacunas no início, no fim ou em períodos sem nenhuma leitura.
-- Status de ambiente e loja diferencia ambientes sem dados de ambientes confortáveis.
-
 ### Health checks
 
 Com o prefixo global da API, os endpoints são:
