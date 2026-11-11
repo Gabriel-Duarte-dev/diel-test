@@ -10,87 +10,91 @@ export class DashboardService {
   async getSnapshot(period: "last_day" | "last_week" | "last_30_days", user: AuthUser) {
     const referenceTime = await this.getReferenceTime();
     const fromDate = this.getFromDate(period, referenceTime);
+    const scope = this.resolveStoreScope(user);
 
-    const storeScope = await this.resolveStoreScope(user);
-
-    if (storeScope.length === 0 || (storeScope.length === 1 && storeScope[0] === "__none__")) {
-      return {
-        success: true,
-        data: {
-          period,
-          storesTotal: 0,
-          environmentsTotal: 0,
-          environmentsOutOfRange: 0,
-          avgComfortPercent: 0,
-        },
-        meta: {
-          referenceTime: referenceTime.toISOString(),
-        },
-      };
+    if (!scope) {
+      return this.emptySnapshot(period, referenceTime);
     }
 
-    const environmentWhere = {
-      storeId: {
-        in: storeScope,
-      },
-    };
-
-    const [environmentsTotal, environmentsOutOfRange, stores] = await Promise.all([
+    const [storesTotal, environmentsTotal, environmentsOutOfRange, aggregation] = await Promise.all([
+      this.prisma.store.count({ where: scope.storeWhere }),
+      this.prisma.environment.count({ where: { store: { is: scope.storeWhere } } }),
       this.prisma.environment.count({
-        where: environmentWhere,
+        where: { store: { is: scope.storeWhere }, status: "FORA_FAIXA" },
       }),
-      this.prisma.environment.count({
-        where: {
-          ...environmentWhere,
-          status: "FORA_FAIXA",
-        },
-      }),
-      this.prisma.environment.findMany({
-        where: environmentWhere,
-        distinct: ["storeId"],
-        select: { storeId: true },
-      }),
+      this.prisma.$queryRaw<Array<{
+        monitoredSeconds: bigint | number | string;
+        comfortSeconds: bigint | number | string;
+      }>>(Prisma.sql`
+        SELECT
+          COALESCE(SUM(r."samplingTime"), 0)::bigint AS "monitoredSeconds",
+          COALESCE(SUM(CASE WHEN r."inComfort" = true THEN r."samplingTime" ELSE 0 END), 0)::bigint AS "comfortSeconds"
+        FROM "TelemetryReading" r
+        INNER JOIN "Environment" e ON e."id" = r."environmentId"
+        INNER JOIN "Store" s ON s."id" = e."storeId"
+        WHERE ${scope.sql}
+          AND r."timestampUtc" >= ${fromDate}
+          AND r."timestampUtc" <= ${referenceTime}
+          AND r."isSpurious" = false
+          AND r."inWorkingHours" = true
+      `),
     ]);
 
-    const readingsAggregation = await this.prisma.$queryRaw<
-      Array<{ monitoredseconds: bigint | number | string | null; comfortseconds: bigint | number | string | null }>
-    >(Prisma.sql`
-      SELECT
-        COALESCE(SUM(r."samplingTime"), 0) AS monitoredSeconds,
-        COALESCE(SUM(CASE WHEN r."inComfort" = true AND r."inWorkingHours" = true THEN r."samplingTime" ELSE 0 END), 0) AS comfortSeconds
-      FROM "TelemetryReading" r
-      INNER JOIN "Environment" e ON e."id" = r."environmentId"
-      WHERE e."storeId" IN (${Prisma.join(storeScope)})
-        AND r."timestampUtc" >= ${fromDate}
-        AND r."timestampUtc" <= ${referenceTime}
-    `);
-
-    const monitoredSeconds = Number(readingsAggregation[0]?.monitoredseconds ?? 0);
-    const comfortSeconds = Number(readingsAggregation[0]?.comfortseconds ?? 0);
+    const monitoredSeconds = Number(aggregation[0]?.monitoredSeconds ?? 0);
+    const comfortSeconds = Number(aggregation[0]?.comfortSeconds ?? 0);
 
     return {
       success: true,
       data: {
         period,
-        storesTotal: stores.length,
+        storesTotal,
         environmentsTotal,
         environmentsOutOfRange,
-        avgComfortPercent: monitoredSeconds > 0 ? Number(((comfortSeconds / monitoredSeconds) * 100).toFixed(2)) : 0,
+        avgComfortPercent: monitoredSeconds > 0
+          ? Number(((comfortSeconds / monitoredSeconds) * 100).toFixed(2))
+          : 0,
       },
-      meta: {
-        referenceTime: referenceTime.toISOString(),
+      meta: { referenceTime: referenceTime.toISOString() },
+    };
+  }
+
+  private emptySnapshot(period: "last_day" | "last_week" | "last_30_days", referenceTime: Date) {
+    return {
+      success: true,
+      data: {
+        period,
+        storesTotal: 0,
+        environmentsTotal: 0,
+        environmentsOutOfRange: 0,
+        avgComfortPercent: 0,
       },
+      meta: { referenceTime: referenceTime.toISOString() },
+    };
+  }
+
+  private resolveStoreScope(user: AuthUser): { storeWhere: Prisma.StoreWhereInput; sql: Prisma.Sql } | null {
+    if (user.role === "ADMIN_DIEL") {
+      return { storeWhere: {}, sql: Prisma.sql`TRUE` };
+    }
+
+    if (user.role === "GESTOR_CLIENTE") {
+      if (!user.clientId) return null;
+      return {
+        storeWhere: { clientId: user.clientId },
+        sql: Prisma.sql`s."clientId" = ${user.clientId}`,
+      };
+    }
+
+    if (!user.storeIds.length) return null;
+    return {
+      storeWhere: { id: { in: user.storeIds } },
+      sql: Prisma.sql`s."id" IN (${Prisma.join(user.storeIds)})`,
     };
   }
 
   private getFromDate(period: "last_day" | "last_week" | "last_30_days", referenceTime: Date) {
-    if (period === "last_week") {
-      return new Date(referenceTime.getTime() - 7 * 24 * 60 * 60 * 1000);
-    }
-    if (period === "last_30_days") {
-      return new Date(referenceTime.getTime() - 30 * 24 * 60 * 60 * 1000);
-    }
-    return new Date(referenceTime.getTime() - 24 * 60 * 60 * 1000);
+    const days = period === "last_week" ? 7 : period === "last_30_days" ? 30 : 1;
+    return new Date(referenceTime.getTime() - days * 24 * 60 * 60 * 1000);
   }
 
   private async getReferenceTime() {
@@ -98,20 +102,4 @@ export class DashboardService {
     return state?.referenceTimeUtc ?? new Date();
   }
 
-  private async resolveStoreScope(user: AuthUser) {
-    if (user.role === "ADMIN_DIEL") {
-      const stores = await this.prisma.store.findMany({ select: { id: true } });
-      return stores.map((item) => item.id);
-    }
-
-    if (user.role === "GESTOR_CLIENTE") {
-      const stores = await this.prisma.store.findMany({
-        where: { clientId: user.clientId ?? undefined },
-        select: { id: true },
-      });
-      return stores.map((item) => item.id);
-    }
-
-    return user.storeIds.length ? user.storeIds : ["__none__"];
-  }
 }

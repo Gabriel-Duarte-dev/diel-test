@@ -33,7 +33,7 @@ test("falha de login com credenciais invalidas", async ({ page }) => {
   await page.getByRole("textbox", { name: "Senha" }).fill("senha-invalida");
   await page.getByRole("button", { name: "LOGIN" }).click();
 
-  await expect(page.getByText("Nao foi possivel autenticar.")).toBeVisible();
+  await expect(page.getByText("Credenciais invalidas")).toBeVisible();
 });
 
 test("filtros e ordenacao na visao da rede", async ({ page }) => {

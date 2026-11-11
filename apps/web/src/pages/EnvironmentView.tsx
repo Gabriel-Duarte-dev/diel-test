@@ -24,8 +24,18 @@ export function EnvironmentView({
     if (environmentId) setSelected(environmentId);
   }, [environmentId]);
 
-  const { summary, summaryLoading, chartData, gaps, seriesLoading } =
-    useEnvironmentData(selected, token, period);
+  const {
+    summary,
+    summaryLoading,
+    summaryError,
+    chartData,
+    gaps,
+    seriesLoading,
+    seriesError,
+  } = useEnvironmentData(selected, token, period);
+
+  const summaryErrorMessage = summaryError instanceof Error ? summaryError.message : null;
+  const seriesErrorMessage = seriesError instanceof Error ? seriesError.message : null;
 
   const label = useMemo(
     () =>
@@ -60,6 +70,17 @@ export function EnvironmentView({
       <p className="mt-2 text-sm text-slate-500">
         {label} · {periodLabel}
       </p>
+
+      {summaryErrorMessage ? (
+        <p role="alert" className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          Nao foi possivel carregar o resumo: {summaryErrorMessage}
+        </p>
+      ) : null}
+      {seriesErrorMessage ? (
+        <p role="alert" className="mt-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          Nao foi possivel carregar a serie: {seriesErrorMessage}
+        </p>
+      ) : null}
 
       <EnvironmentSummary summary={summary} loading={summaryLoading} />
       <EnvironmentChart

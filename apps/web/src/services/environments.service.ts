@@ -5,10 +5,16 @@ import type {
   StoresPeriod,
 } from "../types/domain";
 
-export async function fetchEnvironmentSummary(environmentId: string, token: string) {
-  return apiRequest<EnvironmentSummaryResponse>(`/environments/${environmentId}/summary`, {
-    headers: authHeaders(token),
-  });
+export async function fetchEnvironmentSummary(
+  environmentId: string,
+  token: string,
+  period: StoresPeriod,
+) {
+  const params = new URLSearchParams({ period });
+  return apiRequest<EnvironmentSummaryResponse>(
+    `/environments/${encodeURIComponent(environmentId)}/summary?${params.toString()}`,
+    { headers: authHeaders(token) },
+  );
 }
 
 export async function fetchEnvironmentSeries(
@@ -16,16 +22,9 @@ export async function fetchEnvironmentSeries(
   token: string,
   period: StoresPeriod,
 ) {
-  const params = new URLSearchParams({
-    period,
-    aggregation: "hourly",
-    includeExternal: "true",
-  });
-
+  const params = new URLSearchParams({ period, aggregation: "hourly", includeExternal: "true" });
   return apiRequest<EnvironmentSeriesResponse>(
-    `/environments/${environmentId}/series?${params.toString()}`,
-    {
-      headers: authHeaders(token),
-    },
+    `/environments/${encodeURIComponent(environmentId)}/series?${params.toString()}`,
+    { headers: authHeaders(token) },
   );
 }

@@ -77,19 +77,19 @@ export function NetworkProvider({
   const clientsQuery = useQuery({
     queryKey: ["clients", token],
     queryFn: () => fetchClients(token),
-    refetchInterval: 15000,
+    refetchInterval: 30000,
   });
 
   const storesQuery = useQuery({
     queryKey: ["stores", token, filters],
     queryFn: () => fetchStores(token, filters),
-    refetchInterval: 15000,
+    refetchInterval: 30000,
   });
 
   const snapshotQuery = useQuery({
     queryKey: ["dashboard-snapshot", token, period],
     queryFn: () => fetchDashboardSnapshot(token, period),
-    refetchInterval: 15000,
+    refetchInterval: 30000,
   });
 
   const subscribedStoreIds = useMemo(

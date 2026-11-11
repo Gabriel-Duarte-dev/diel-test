@@ -1,4 +1,4 @@
-import { IsIn, IsInt, IsOptional, IsString, Min } from "class-validator";
+import { IsIn, IsInt, IsOptional, IsString, Min, Max } from "class-validator";
 import { Type } from "class-transformer";
 
 export class ListStoresQuery {
@@ -32,6 +32,7 @@ export class ListStoresQuery {
   @Type(() => Number)
   @IsInt()
   @Min(1)
+  @Max(100)
   limit = 20;
 
   @IsOptional()

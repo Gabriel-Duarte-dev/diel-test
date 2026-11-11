@@ -3,41 +3,36 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchEnvironmentSeries, fetchEnvironmentSummary } from "../services/environments.service";
 import type { StoresPeriod } from "../types/domain";
 
+const FALLBACK_REFETCH_INTERVAL_MS = 30_000;
+
 export function useEnvironmentData(environmentId: string | null, token: string, period: StoresPeriod) {
   const summaryQuery = useQuery({
-    queryKey: ["environment-summary", environmentId],
-    queryFn: () => fetchEnvironmentSummary(environmentId as string, token),
+    queryKey: ["environment-summary", environmentId, period, token],
+    queryFn: () => fetchEnvironmentSummary(environmentId as string, token, period),
     enabled: Boolean(environmentId),
-    refetchInterval: 5000,
+    // Socket.IO invalidation is the primary update path; polling is a safety net.
+    refetchInterval: FALLBACK_REFETCH_INTERVAL_MS,
   });
 
   const seriesQuery = useQuery({
-    queryKey: ["environment-series", environmentId, period],
+    queryKey: ["environment-series", environmentId, period, token],
     queryFn: () => fetchEnvironmentSeries(environmentId as string, token, period),
     enabled: Boolean(environmentId),
-    refetchInterval: 15000,
+    refetchInterval: FALLBACK_REFETCH_INTERVAL_MS,
   });
 
   const chartData = useMemo(() => {
     const internalSeries = seriesQuery.data?.data?.series ?? [];
     const externalSeries = seriesQuery.data?.data?.externalTemperature ?? [];
-
     const byTimestamp = new Map<string, { timestamp: string; interna?: number; externa?: number }>();
 
     for (const point of internalSeries) {
       const key = new Date(point.timestamp).toISOString();
-      byTimestamp.set(key, {
-        ...(byTimestamp.get(key) ?? { timestamp: key }),
-        interna: point.temperature,
-      });
+      byTimestamp.set(key, { ...(byTimestamp.get(key) ?? { timestamp: key }), interna: point.temperature });
     }
-
     for (const point of externalSeries) {
       const key = new Date(point.timestampUtc).toISOString();
-      byTimestamp.set(key, {
-        ...(byTimestamp.get(key) ?? { timestamp: key }),
-        externa: point.temperature,
-      });
+      byTimestamp.set(key, { ...(byTimestamp.get(key) ?? { timestamp: key }), externa: point.temperature });
     }
 
     return Array.from(byTimestamp.values())
@@ -45,10 +40,7 @@ export function useEnvironmentData(environmentId: string | null, token: string, 
       .map((item) => ({
         ...item,
         label: new Date(item.timestamp).toLocaleString("pt-BR", {
-          day: "2-digit",
-          month: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
+          day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit",
         }),
       }));
   }, [seriesQuery.data]);
@@ -56,8 +48,10 @@ export function useEnvironmentData(environmentId: string | null, token: string, 
   return {
     summary: summaryQuery.data?.data,
     summaryLoading: summaryQuery.isLoading,
+    summaryError: summaryQuery.error,
     chartData,
     gaps: seriesQuery.data?.data?.gaps ?? [],
     seriesLoading: seriesQuery.isLoading,
+    seriesError: seriesQuery.error,
   };
 }

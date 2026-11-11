@@ -35,8 +35,8 @@ export function App() {
       const response = await loginUser(email, senha);
       setToken(response.data.accessToken);
       setCurrentUser(response.data.user);
-    } catch {
-      setAuthError("Nao foi possivel autenticar.");
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : "Nao foi possivel autenticar.");
     }
   }
 

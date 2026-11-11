@@ -16,7 +16,9 @@ export class ClientsService {
       return { success: true, data: clients };
     }
 
-    if (user.role === "GESTOR_CLIENTE" && user.clientId) {
+    if (user.role === "GESTOR_CLIENTE") {
+      if (!user.clientId) return { success: true, data: [] };
+
       const client = await this.prisma.client.findUnique({
         where: { id: user.clientId },
         select: { id: true, nome: true },

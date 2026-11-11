@@ -6,6 +6,7 @@ import helmet from "helmet";
 async function bootstrap() {
   const { AppModule } = await import("./modules/app.module");
   const app = await NestFactory.create(AppModule);
+  app.enableShutdownHooks();
 
   app.use(helmet());
   app.enableCors({ origin: process.env.WS_CORS_ORIGIN ?? "http://localhost:5173" });

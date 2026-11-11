@@ -25,11 +25,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-      redis:
-        image: redis:7-alpine
-        ports:
-          - 6379:6379
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,12 +37,14 @@ jobs:
 
       - name: Create env file
         run: |
-          cat > .env <<'EOF'
+          cat > .env <<'ENVEOF'
           DATABASE_URL=postgresql://postgres:postgres@localhost:5432/diel
-          JWT_SECRETS=change-me
+          JWT_SECRETS=change-me-for-ci-only
           API_PORT=3000
           WS_CORS_ORIGIN=http://localhost:5173
-          EOF
+          VITE_API_URL=http://localhost:3000/api/v1
+          VITE_WS_URL=http://localhost:3000/realtime
+          ENVEOF
 
       - name: Install dependencies
         run: npm ci
@@ -55,20 +52,37 @@ jobs:
       - name: Prisma generate
         run: npm run db:generate
 
-      - name: Prisma migrate
-        run: npm run db:migrate
+      - name: Prisma migrate deploy
+        run: npm run db:migrate:deploy -w apps/api
 
       - name: Seed database
         run: npm run db:seed
 
+      - name: Typecheck workspaces
+        run: npm run typecheck
+
       - name: Unit tests API
-        run: npm run test -w apps/api -- --runInBand
+        run: npm run test -w apps/api
 
       - name: Integration tests API
         run: npm run test:integration -w apps/api
 
+      - name: Worker tests
+        run: npm run test -w apps/worker
+
+      - name: Web unit tests
+        run: npm run test:ci -w apps/web
+
       - name: Build API
         run: npm run build -w apps/api
+
+      - name: Build Worker
+        run: npm run build -w apps/worker
+
+      - name: Worker ingestion smoke test
+        run: |
+          printf '%s\n' '{"dev_id":"IOT001","timestamp":"2026-01-15T12:00:00","GMT":-3,"samplingTime":30,"Temperature":[23.5]}' > "$RUNNER_TEMP/telemetry-smoke.jsonl"
+          TELEMETRY_FILE="$RUNNER_TEMP/telemetry-smoke.jsonl" npm run start -w apps/worker
 
       - name: Build Web
         run: npm run build -w apps/web

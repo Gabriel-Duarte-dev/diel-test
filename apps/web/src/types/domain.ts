@@ -69,7 +69,14 @@ export type EnvironmentSummaryResponse = {
     status: string;
     comfortRange: { min: number; max: number };
     store: { id: string; nome: string; cidade: string };
-    metrics?: { comfortPercent?: number };
+    period?: { from: string; to: string };
+    metrics?: {
+      comfortPercent?: number;
+      monitoredSeconds?: number;
+      comfortSeconds?: number;
+      outOfRangeSeconds?: number;
+      missingSeconds?: number;
+    };
     device?: { status?: string; lastPacketAt?: string | null };
   };
 };
@@ -77,9 +84,17 @@ export type EnvironmentSummaryResponse = {
 export type EnvironmentSeriesResponse = {
   success: boolean;
   data: {
-    series: Array<{ timestamp: string; temperature: number }>;
+    series: Array<{
+      timestamp: string;
+      temperature: number;
+      inComfort?: boolean;
+      inWorkingHours?: boolean;
+      isSpurious?: boolean;
+      isLatePacket?: boolean;
+      sampleCount?: number;
+    }>;
     externalTemperature: Array<{ timestampUtc: string; temperature: number }>;
-    gaps: Array<{ from: string; to: string; reason: string }>;
+    gaps: Array<{ from: string; to: string; reason: string; missingSeconds?: number }>;
   };
 };
 

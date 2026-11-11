@@ -2,6 +2,7 @@ import { Controller, Get, Param, Query, Req, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthUser } from "../auth/auth.types";
 import { EnvironmentsService } from "../services/environments.service";
+import { DateRangeQuery } from "./dto/date-range.query";
 import { SeriesQuery } from "./dto/series.query";
 
 @Controller("environments")
@@ -12,11 +13,10 @@ export class EnvironmentsController {
   @Get(":id/summary")
   async getSummary(
     @Param("id") id: string,
-    @Query("from") from: string | undefined,
-    @Query("to") to: string | undefined,
+    @Query() query: DateRangeQuery,
     @Req() req: { user: AuthUser },
   ) {
-    return this.environmentsService.getSummary(id, req.user, from, to);
+    return this.environmentsService.getSummary(id, req.user, query);
   }
 
   @Get(":id/series")

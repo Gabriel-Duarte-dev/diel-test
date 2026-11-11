@@ -5,7 +5,7 @@ import { AuthService } from "./auth.service";
 export class AuthGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers.authorization as string | undefined;
 
@@ -13,8 +13,13 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException("Token ausente");
     }
 
-    const token = authHeader.slice("Bearer ".length);
-    request.user = this.authService.parseToken(token);
+    const token = authHeader.slice("Bearer ".length).trim();
+    if (!token) {
+      throw new UnauthorizedException("Token ausente");
+    }
+
+    const session = await this.authService.authenticate(token);
+    request.user = session.user;
     return true;
   }
 }

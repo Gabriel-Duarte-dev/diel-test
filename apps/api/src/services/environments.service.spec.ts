@@ -8,11 +8,12 @@ describe("EnvironmentsService", () => {
         findUnique: jest.fn(),
       },
       ingestionState: {
-        findUnique: jest.fn().mockResolvedValue({ referenceTimeUtc: new Date("2026-01-15T00:00:00Z") }),
+        findUnique: jest.fn().mockResolvedValue({ referenceTimeUtc: new Date("2026-01-15T10:00:00Z") }),
       },
       telemetryReading: {
         findMany: jest.fn().mockResolvedValue([]),
       },
+      $queryRaw: jest.fn().mockResolvedValue([]),
     } as any;
 
     const weatherService = {
@@ -29,30 +30,16 @@ describe("EnvironmentsService", () => {
   it("bloqueia acesso de gerente fora do escopo", async () => {
     const { service, prisma } = createService();
 
-    prisma.environment.findUnique
-      .mockResolvedValueOnce({
-        id: "AMB-001",
-        nome: "Ambiente",
-        faixaConfortoMin: 21,
-        faixaConfortoMax: 25,
-        status: "SEM_DADOS",
-        storeId: "LOJA-RJ-001",
-        store: {
-          id: "LOJA-RJ-001",
-          clientId: "CLI-001",
-          nome: "Loja",
-          cidade: "Rio",
-        },
-        device: null,
-      })
-      .mockResolvedValueOnce({
-        id: "AMB-001",
-        storeId: "LOJA-RJ-001",
-        store: {
-          id: "LOJA-RJ-001",
-          clientId: "CLI-001",
-        },
-      });
+    prisma.environment.findUnique.mockResolvedValueOnce({
+      id: "AMB-001",
+      nome: "Ambiente",
+      faixaConfortoMin: 21,
+      faixaConfortoMax: 25,
+      status: "SEM_DADOS",
+      storeId: "LOJA-RJ-001",
+      store: { id: "LOJA-RJ-001", clientId: "CLI-001", nome: "Loja", cidade: "Rio" },
+      device: null,
+    });
 
     await expect(
       service.getSummary(
@@ -63,31 +50,73 @@ describe("EnvironmentsService", () => {
           clientId: null,
           storeIds: ["LOJA-SP-001"],
         },
-        undefined,
-        undefined,
+        {},
       ),
     ).rejects.toBeInstanceOf(ForbiddenException);
+  });
+
+  it("uses SQL aggregates for summary metrics and counts only scheduled missing time", async () => {
+    const { service, prisma } = createService();
+    prisma.environment.findUnique.mockResolvedValueOnce({
+      id: "AMB-001",
+      nome: "Ambiente",
+      faixaConfortoMin: 21,
+      faixaConfortoMax: 25,
+      status: "CONFORTAVEL",
+      horarioFuncionamento: { qui: ["08:00", "17:00"] },
+      store: {
+        id: "STORE-1",
+        clientId: "CLI-001",
+        nome: "Loja",
+        cidade: "Sao Paulo",
+        fusoHorario: "UTC",
+      },
+      device: { id: "IOT001", status: "ONLINE", lastPacketAt: new Date("2026-01-15T11:00:00Z") },
+    });
+    prisma.$queryRaw.mockResolvedValueOnce([
+      { monitoredSeconds: 3600n, comfortSeconds: 2700n, outOfRangeSeconds: 900n },
+    ]);
+
+    const result = await service.getSummary("AMB-001", {
+      userId: "admin-1",
+      role: "ADMIN_DIEL",
+      clientId: null,
+      storeIds: [],
+    }, {
+      from: "2026-01-15T08:00:00.000Z",
+      to: "2026-01-15T10:00:00.000Z",
+    });
+
+    expect(prisma.telemetryReading.findMany).not.toHaveBeenCalled();
+    expect(prisma.$queryRaw).toHaveBeenCalledTimes(1);
+    expect(result.data.period).toEqual({
+      from: "2026-01-15T08:00:00.000Z",
+      to: "2026-01-15T10:00:00.000Z",
+    });
+    expect(result.data.metrics).toEqual({
+      comfortPercent: 75,
+      monitoredSeconds: 3600,
+      comfortSeconds: 2700,
+      outOfRangeSeconds: 900,
+      missingSeconds: 3600,
+    });
   });
 
   it("retorna serie agregada para usuario autorizado", async () => {
     const { service, prisma } = createService();
 
-    prisma.environment.findUnique
-      .mockResolvedValueOnce({
-        id: "AMB-001",
-        faixaConfortoMin: 21,
-        faixaConfortoMax: 25,
-        status: "CONFORTAVEL",
-        storeId: "LOJA-RJ-001",
-      })
-      .mockResolvedValueOnce({
-        id: "AMB-001",
-        storeId: "LOJA-RJ-001",
-        store: {
-          id: "LOJA-RJ-001",
-          clientId: "CLI-001",
-        },
-      });
+    prisma.environment.findUnique.mockResolvedValueOnce({
+      id: "AMB-001",
+      faixaConfortoMin: 21,
+      faixaConfortoMax: 25,
+      status: "CONFORTAVEL",
+      storeId: "LOJA-RJ-001",
+      store: { id: "LOJA-RJ-001", clientId: "CLI-001", latitude: -22.9, longitude: -43.2 },
+    });
+
+    prisma.$queryRaw.mockResolvedValueOnce([
+      { timestamp: new Date("2026-01-14T10:00:00Z"), temperature: 23, sampleCount: 2, inComfort: true, inWorkingHours: true },
+    ]).mockResolvedValueOnce([]);
 
     prisma.telemetryReading.findMany.mockResolvedValue([
       {
@@ -129,28 +158,18 @@ describe("EnvironmentsService", () => {
   it("inclui temperatura externa quando includeExternal=true", async () => {
     const { service, prisma, weatherService } = createService();
 
-    prisma.environment.findUnique
-      .mockResolvedValueOnce({
-        id: "AMB-001",
-        faixaConfortoMin: 21,
-        faixaConfortoMax: 25,
-        status: "CONFORTAVEL",
-        storeId: "LOJA-RJ-001",
-        store: {
-          id: "LOJA-RJ-001",
-          clientId: "CLI-001",
-          latitude: -22.9,
-          longitude: -43.2,
-        },
-      })
-      .mockResolvedValueOnce({
-        id: "AMB-001",
-        storeId: "LOJA-RJ-001",
-        store: {
-          id: "LOJA-RJ-001",
-          clientId: "CLI-001",
-        },
-      });
+    prisma.environment.findUnique.mockResolvedValueOnce({
+      id: "AMB-001",
+      faixaConfortoMin: 21,
+      faixaConfortoMax: 25,
+      status: "CONFORTAVEL",
+      storeId: "LOJA-RJ-001",
+      store: { id: "LOJA-RJ-001", clientId: "CLI-001", latitude: -22.9, longitude: -43.2 },
+    });
+
+    prisma.$queryRaw.mockResolvedValueOnce([
+      { timestamp: new Date("2026-01-14T10:00:00Z"), temperature: 23, sampleCount: 1, inComfort: true, inWorkingHours: true },
+    ]).mockResolvedValueOnce([]);
 
     prisma.telemetryReading.findMany.mockResolvedValue([]);
     weatherService.getExternalSeriesForStore.mockResolvedValue([

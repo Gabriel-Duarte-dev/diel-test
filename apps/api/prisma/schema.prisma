@@ -49,6 +49,7 @@ model Store {
   ambientes            Environment[]
   externalTemperatures ExternalTemperature[]
   userStoreAccess      UserStoreAccess[]
+  ingestionEvents      IngestionEvent[]
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
 
@@ -136,6 +137,7 @@ model RawTelemetryPacket {
   temperatures Json
   savedData    Boolean  @default(false)
   sourceLine   Int
+  sourceKey    String   @unique
   createdAt    DateTime @default(now())
 
   @@index([devId, timestamp(sort: Desc)])
@@ -143,7 +145,7 @@ model RawTelemetryPacket {
 
 model TelemetryReading {
   id              String      @id @default(cuid())
-  devId           String
+  devId           String?
   environmentId   String
   packetTimestamp DateTime
   packetGmt       Int
@@ -161,6 +163,7 @@ model TelemetryReading {
 
   @@unique([devId, timestampUtc])
   @@index([environmentId, timestampUtc(sort: Desc)])
+  @@index([environmentId, isSpurious, timestampUtc(sort: Desc)])
   @@index([devId, timestampUtc(sort: Desc)])
 }
 
@@ -184,4 +187,17 @@ model IngestionState {
   id               String   @id
   referenceTimeUtc DateTime
   updatedAt        DateTime @updatedAt
+}
+
+
+model IngestionEvent {
+  id               BigInt   @id @default(autoincrement())
+  storeId          String
+  referenceTimeUtc DateTime
+  createdAt        DateTime @default(now())
+  processedAt      DateTime?
+  store            Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([processedAt, id])
+  @@index([storeId, createdAt])
 }
